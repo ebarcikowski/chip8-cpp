@@ -1,6 +1,7 @@
 // Chip8.h -*- C++ -*-
 #pragma once
 #include <cstdint>
+#include <array>
 
 /// This is toy chip8 emulatation that I wrote just to learn how chip8 and
 /// emulators work.
@@ -28,35 +29,38 @@ public:
   void SetKeys() {};
   bool DrawFlag() {};
 
+  static constexpr size_t kMemSize{4096};
+  static constexpr size_t kRomSize{3584};
+  static constexpr size_t kPCIndex{0x200};
 protected:
   /// current opcode
-  uint16_t opcode_;
+  uint16_t opcode_{0};
   /// 4k memory
-  uint8_t memory_[4096];
+  std::array<uint8_t, kMemSize> memory_{0};
   /// 15 8-bit registers named V0, V1,.., VE.  The 16th register is used for
   /// the 'carry flag'.
-  uint8_t v_[16];
+  std::array<uint8_t, 16> v_{0};
   /// index register
-  uint16_t i_;
+  uint16_t i_{0};
   /// program counter. May be 0x000 to 0xfff.
   ///
   /// 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
   /// 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
   /// 0x200-0xFFF - Program ROM and work RAM
   /// pc_ points to location in memory_
-  uint16_t pc_;
+  uint16_t pc_{0};
   /// graphics system: The chip-8 has one instruction that draws a sprite
   /// to the screen.  Drawing is done in XOR mode and if a pixel is turn off
   /// as a result of the drawing the VF register is set.
   ///
   /// The window size is 64 x 32 (2048 pixels)
-  uint8_t gfx_[64 * 32];
-  uint8_t delay_timer_;
-  uint8_t sound_timer_;
+  std::array<uint8_t, 64 * 32> gfx_{0};
+  uint8_t delay_timer_{0};
+  uint8_t sound_timer_{0};
   /// stack depth is 16 deep
-  uint16_t stack_[16];
+  std::array<uint16_t, 16> stack_{0};
   /// stack pointer
-  uint16_t sp_;
+  uint16_t sp_{0};
   /// hex based keypad to store the current state of a key
-  uint8_t key_[16];
+  std::array<uint8_t, 16> key_{0};
 };

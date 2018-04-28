@@ -9,7 +9,7 @@ static std::array<uint8_t, 80> chip8_fontset{0};
 
 void Chip8::Init()
 {
-  pc_ = 0x200;
+  pc_ = kPCIndex;
   opcode_ = 0;
   i_ = 0;
   sp_ = 0;
@@ -33,7 +33,7 @@ void Chip8::Load(const char* filename)
 
   is.seekg(0, is.end);
   size_t length = is.tellg();
-  if (length < 0) {
+  if (length < kRomSize) {
     std::cerr << "Invalid input file: " << filename << "\n";
     exit(1);
   }
@@ -42,7 +42,7 @@ void Chip8::Load(const char* filename)
   // fill in read.  Just copy file data to memory_
   std::copy(std::istreambuf_iterator<char>(is),
             std::istreambuf_iterator<char>(),
-            memory_ + 0x200);
+            memory_.begin() + kPCIndex);
 }
 
 void Chip8::EmulateCycle()
