@@ -30,8 +30,8 @@ public:
   bool DrawFlag() {};
 
   static constexpr size_t kMemSize{4096};
-  static constexpr size_t kRomSize{3584};
   static constexpr size_t kPCIndex{0x200};
+  static constexpr size_t kRomSize{kMemSize - kPCIndex};
 protected:
   /// current opcode
   uint16_t opcode_{0};
