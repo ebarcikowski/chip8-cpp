@@ -2,6 +2,8 @@
 #pragma once
 #include <cstdint>
 #include <array>
+#include <functional>
+#include <unordered_map>
 
 /// This is toy chip8 emulatation that I wrote just to learn how chip8 and
 /// emulators work.
@@ -33,13 +35,26 @@ public:
   static constexpr size_t kPCIndex{0x200};
   static constexpr size_t kRomSize{kMemSize - kPCIndex};
 protected:
+  /// \brief Initialize registers and memory once
+  void Init();
+
+  /// \brief Map opcodes to functions
+  void InitOpFunc();
+
+  uint16_t OpCode() const;
+
+  //
+  // Opcode functions
+
+  void OpSetAddress(uint16_t opc);
+  void OpJumpAddress(uint16_t opc);
   /// current opcode
   uint16_t opcode_{0};
   /// 4k memory
-  std::array<uint8_t, kMemSize> memory_{0};
+  std::array<uint8_t, kMemSize> memory_{};
   /// 15 8-bit registers named V0, V1,.., VE.  The 16th register is used for
   /// the 'carry flag'.
-  std::array<uint8_t, 16> v_{0};
+  std::array<uint8_t, 16> v_;
   /// index register
   uint16_t i_{0};
 
@@ -56,13 +71,15 @@ protected:
   /// as a result of the drawing the VF register is set.
   ///
   /// The window size is 64 x 32 (2048 pixels)
-  std::array<uint8_t, 64 * 32> gfx_{0};
+  std::array<uint8_t, 64 * 32> gfx_{};
   uint8_t delay_timer_{0};
   uint8_t sound_timer_{0};
   /// stack depth is 16 deep
-  std::array<uint16_t, 16> stack_{0};
+  std::array<uint16_t, 16> stack_{};
   /// stack pointer
   uint16_t sp_{0};
   /// hex based keypad to store the current state of a key
   std::array<uint8_t, 16> key_{0};
+
+  std::unordered_map<unsigned, std::function<void(uint16_t)>> func_map_;
 };
