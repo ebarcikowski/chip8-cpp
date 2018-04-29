@@ -3,14 +3,34 @@
 #include <fstream>
 #include <iterator>
 #include <array>
+#include <cassert>
 
 
-static std::array<uint8_t, 80> chip8_fontset{};
+static std::array<uint8_t, 80> chip8_fontset{
+  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+  0x20, 0x60, 0x20, 0x20, 0x70, // 1
+  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+};
 
 void Chip8::InitOpFunc()
 {
+  func_map_[0x0000] = [this](uint16_t opc){OpDefault(opc);};
   func_map_[0xa000] = [this](uint16_t opc){OpSetAddress(opc);};
-  func_map_[0x2000] = [this](uint16_t opc){OpJumpAddress(opc);};
+  func_map_[0x2000] = [this](uint16_t opc){OpSubRoutine(opc);};
+  func_map_[0x1000] = [this](uint16_t opc){OpJump(opc);};
 }
 
 void Chip8::Init()
@@ -84,7 +104,7 @@ void Chip8::OpSetAddress(uint16_t opcode)
 }
 
 
-void Chip8::OpJumpAddress(uint16_t opc)
+void Chip8::OpSubRoutine(uint16_t opc)
 {
   // jump to address in lower 12 bits 0x0fff
   // put the current program counter on the stack
@@ -92,4 +112,23 @@ void Chip8::OpJumpAddress(uint16_t opc)
   ++sp_;
   // set pc to to jump address
   pc_ = opcode_ & 0x0fff;
+}
+
+void Chip8::OpJump(uint16_t opc)
+{
+  pc_ = opc & 0x0fff;
+}
+
+void Chip8::OpDefault(uint16_t opc)
+{
+  switch (opc) {
+  case 0x00e0:
+    std::cerr << "Not implimented\n";
+    break;
+  case 0x0ee:
+    // return from subroutine
+    assert(sp_ > 0);
+    pc_ = stack_[--sp_];
+    break;
+  }
 }

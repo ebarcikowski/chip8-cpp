@@ -46,7 +46,10 @@ protected:
   // Opcode functions
 
   void OpSetAddress(uint16_t opc);
-  void OpJumpAddress(uint16_t opc);
+  void OpJump(uint16_t opc);
+  void OpSubRoutine(uint16_t opc);
+  void OpDefault(uint16_t opc);
+
   /// current opcode
   uint16_t opcode_{0};
   /// 4k memory
@@ -54,7 +57,8 @@ protected:
   /// 15 8-bit registers named V0, V1,.., VE.  The 16th register is used for
   /// the 'carry flag'.
   std::array<uint8_t, 16> v_;
-  /// index register
+
+  /// Index to locations in memory used for writing or reading data
   uint16_t i_{0};
 
   /// program counter. May be 0x000 to 0xfff.
