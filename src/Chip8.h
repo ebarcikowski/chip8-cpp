@@ -42,12 +42,14 @@ protected:
   std::array<uint8_t, 16> v_{0};
   /// index register
   uint16_t i_{0};
+
   /// program counter. May be 0x000 to 0xfff.
+  ///
+  /// pc_ points to location in memory_
   ///
   /// 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
   /// 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
   /// 0x200-0xFFF - Program ROM and work RAM
-  /// pc_ points to location in memory_
   uint16_t pc_{0};
   /// graphics system: The chip-8 has one instruction that draws a sprite
   /// to the screen.  Drawing is done in XOR mode and if a pixel is turn off
