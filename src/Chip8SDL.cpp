@@ -28,39 +28,25 @@ void Chip8SDL::Destroy()
 
 void Chip8SDL::Init()
 {
-  if (SDL_Init(SDL_INIT_VIDEO) != 0){
+  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
     return;
   }
-
-
-
 
   // SDL_CreateWindowAndRenderer(width_, height_, 0, &win_, &ren_);
   win_ = SDL_CreateWindow("Chip8", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                           width_, height_, SDL_WINDOW_SHOWN);
   ren_ = SDL_CreateRenderer(win_, -1, 0);
 	//Make sure creating our window went ok
-	if (win_ == nullptr){
+	if (win_ == nullptr) {
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 		return;
 	}
-
-	// SDL_Renderer *ren = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED |
-  // SDL_RENDERER_PRESENTVSYNC);
-	// if (ren == nullptr){
-	// 	SDL_DestroyWindow(win_);
-	// 	std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-	// 	SDL_Quit();
-	// 	return;
-	// }
-
   tex_ = SDL_CreateTexture(ren_,
                            SDL_PIXELFORMAT_ARGB8888,
                            SDL_TEXTUREACCESS_STREAMING,
                            width_, height_);
-  // 0xff000000, 0x00ff0000,
-  //   0x0000ff00, 0x000000ff);
+
   surf_ = SDL_CreateRGBSurface(0, width_, height_, 32, 0, 0, 0, 0);
 	//Make sure creating our window went ok
 	if (surf_ == nullptr){
@@ -103,7 +89,6 @@ void Chip8SDL::SetSurface(const uint8_t *gfx)
       rect.x = i * scale_;
       rect.y = j * scale_;
       if (gfx[index]) {
-        // std::cout << index << ", " << i << ", " << j << "\n";
         SDL_FillRect(surf_, &rect, 255);
       }
       else {
