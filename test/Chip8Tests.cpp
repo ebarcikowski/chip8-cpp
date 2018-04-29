@@ -23,7 +23,7 @@ protected:
   /// dummy file to write some data to
   static constexpr char test_file[]{"test_file"};
   /// dummy data to compare to after load
-  std::array<uint8_t, Chip8::kRomSize> rom_{0};
+  std::array<uint8_t, Chip8::kRomSize> rom_{};
 
   /// Setup dummy file and data
   virtual void SetUp()

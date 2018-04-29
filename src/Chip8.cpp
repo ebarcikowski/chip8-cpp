@@ -5,7 +5,7 @@
 #include <array>
 
 
-static std::array<uint8_t, 80> chip8_fontset{0};
+static std::array<uint8_t, 80> chip8_fontset{};
 
 void Chip8::InitOpFunc()
 {

@@ -78,7 +78,7 @@ protected:
   /// stack pointer
   uint16_t sp_{0};
   /// hex based keypad to store the current state of a key
-  std::array<uint8_t, 16> key_{0};
+  std::array<uint8_t, 16> key_{};
 
   std::unordered_map<unsigned, std::function<void(uint16_t)>> func_map_;
 };
