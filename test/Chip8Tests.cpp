@@ -8,6 +8,8 @@ class Chip8IFace : public Chip8
 {
 public:
   uint16_t PC() {return pc_;}
+  // change visibility of some members for seting.
+  using Chip8::Init;
 
   void AssertMemoryEquals(size_t index, size_t value)
   {

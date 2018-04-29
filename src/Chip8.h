@@ -16,8 +16,7 @@
 class Chip8
 {
 public:
-  /// initialize registers and memory once
-  void Init();
+
 
   /// Fetch Opcode
   /// Decode Opcode
