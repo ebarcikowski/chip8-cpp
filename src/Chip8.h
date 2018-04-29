@@ -30,9 +30,12 @@ public:
   void SetKeys() {};
   bool DrawFlag() {};
 
-  static constexpr size_t kMemSize{4096};
-  static constexpr size_t kPCIndex{0x200};
-  static constexpr size_t kRomSize{kMemSize - kPCIndex};
+  static constexpr unsigned kMemSize{4096};
+  static constexpr unsigned kPCIndex{0x200};
+  static constexpr unsigned kRomSize{kMemSize - kPCIndex};
+  static constexpr unsigned kWidth{64};
+  static constexpr unsigned kHeight{32};
+
 protected:
   /// \brief Initialize registers and memory once
   void Init();
@@ -74,7 +77,7 @@ protected:
   /// as a result of the drawing the VF register is set.
   ///
   /// The window size is 64 x 32 (2048 pixels)
-  std::array<uint8_t, 64 * 32> gfx_{};
+  std::array<uint8_t, kWidth * kHeight> gfx_{};
   uint8_t delay_timer_{0};
   uint8_t sound_timer_{0};
   /// stack depth is 16 deep

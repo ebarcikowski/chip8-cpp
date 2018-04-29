@@ -75,6 +75,7 @@ uint16_t Chip8::OpCode() const
 {
   return (memory_[pc_] << 8) | memory_[pc_ + 1];
 }
+
 void Chip8::EmulateCycle()
 {
   // get opcode
@@ -95,7 +96,6 @@ void Chip8::EmulateCycle()
     --sound_timer_;
   }
 }
-
 
 void Chip8::OpSetAddress(uint16_t opcode)
 {
