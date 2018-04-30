@@ -40,8 +40,10 @@ void Chip8SDL::Init()
   }
 
   // SDL_CreateWindowAndRenderer(width_, height_, 0, &win_, &ren_);
-  win_ = SDL_CreateWindow("Chip8", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                          width_, height_, SDL_WINDOW_SHOWN);
+  win_ = SDL_CreateWindow("Chip8", SDL_WINDOWPOS_UNDEFINED,
+                          SDL_WINDOWPOS_UNDEFINED, width_, height_,
+                          SDL_WINDOW_SHOWN);
+
   ren_ = SDL_CreateRenderer(win_, -1, 0);
 	//Make sure creating our window went ok
 	if (win_ == nullptr) {
@@ -61,7 +63,8 @@ void Chip8SDL::Init()
 	}
   //Initialize SDL_mixer
   if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) {
-    std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " <<  Mix_GetError()
+    std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " <<
+      Mix_GetError()
               << "\n";
     return;
   }
