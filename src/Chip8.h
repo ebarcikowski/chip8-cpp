@@ -16,7 +16,7 @@
 class Chip8
 {
 public:
-
+  Chip8();
 
   /// Fetch Opcode
   /// Decode Opcode
@@ -48,10 +48,13 @@ protected:
   //
   // Opcode functions
 
-  void OpSetAddress(uint16_t opc);
-  void OpJump(uint16_t opc);
-  void OpSubRoutine(uint16_t opc);
-  void OpDefault(uint16_t opc);
+  virtual void OpSetAddress(uint16_t opc);
+  virtual void OpJump(uint16_t opc);
+  virtual void OpSubRoutine(uint16_t opc);
+  virtual void OpDefault(uint16_t opc);
+  virtual void OpSkipInstr(uint16_t opc);
+  virtual void OpSkipInstrNot(uint16_t opc);
+  virtual void OpSkipInstrEquals(uint16_t opc);
 
   /// current opcode
   uint16_t opcode_{0};

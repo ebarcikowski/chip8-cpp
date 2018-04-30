@@ -28,9 +28,18 @@ static std::array<uint8_t, 80> chip8_fontset{
 void Chip8::InitOpFunc()
 {
   func_map_[0x0000] = [this](uint16_t opc){OpDefault(opc);};
-  func_map_[0xa000] = [this](uint16_t opc){OpSetAddress(opc);};
-  func_map_[0x2000] = [this](uint16_t opc){OpSubRoutine(opc);};
   func_map_[0x1000] = [this](uint16_t opc){OpJump(opc);};
+  func_map_[0x2000] = [this](uint16_t opc){OpSubRoutine(opc);};
+  func_map_[0x3000] = [this](uint16_t opc){OpSkipInstr(opc);};
+  func_map_[0x4000] = [this](uint16_t opc){OpSkipInstrNot(opc);};
+  func_map_[0x5000] = [this](uint16_t opc){OpSkipInstrEquals(opc);};
+  func_map_[0xa000] = [this](uint16_t opc){OpSetAddress(opc);};
+}
+
+Chip8::Chip8()
+{
+  Init();
+  InitOpFunc();
 }
 
 void Chip8::Init()
@@ -114,6 +123,35 @@ void Chip8::OpSubRoutine(uint16_t opc)
   pc_ = opcode_ & 0x0fff;
 }
 
+void Chip8::OpSkipInstr(uint16_t opc)
+{
+  uint8_t val = opc & 0xff;
+  uint8_t reg = (opc >> 4) & 0xF;
+  assert(reg < 16);
+  if (v_[reg] == val) {
+    pc_ += 2;
+  }
+}
+
+void Chip8::OpSkipInstrNot(uint16_t opc)
+{
+  uint8_t val = opc & 0xff;
+  uint8_t reg = (opc >> 4) & 0xF;
+  assert(reg < 16);
+  if (v_[reg] != val) {
+    pc_ += 2;
+  }
+}
+
+void Chip8::OpSkipInstrEquals(uint16_t opc)
+{
+  uint8_t regx = (opc >> 4) & 0xF;
+  uint8_t regy = (opc >> 8) & 0xF;
+  if (v_[regx] == v_[regy]) {
+    pc_ += 2;
+  }
+}
+
 void Chip8::OpJump(uint16_t opc)
 {
   pc_ = opc & 0x0fff;
@@ -123,7 +161,7 @@ void Chip8::OpDefault(uint16_t opc)
 {
   switch (opc) {
   case 0x00e0:
-    std::cerr << "Not implimented\n";
+    std::fill(gfx_.begin(), gfx_.end(), 0);
     break;
   case 0x0ee:
     // return from subroutine
