@@ -1,5 +1,6 @@
 #include "Chip8SDL.h"
 #include <iostream>
+#include <SDL2/SDL_mixer.h>
 
 Chip8SDL::Chip8SDL(unsigned scale) : scale_{scale},
                                      width_{Chip8::kWidth * scale},
@@ -16,19 +17,24 @@ Chip8SDL::~Chip8SDL()
 
 void Chip8SDL::Destroy()
 {
+  if (bonk_)
+    Mix_FreeChunk(bonk_);
   if (surf_)
     SDL_FreeSurface(surf_);
   if (win_)
     SDL_DestroyWindow(win_);
 
+  bonk_ = nullptr;
   surf_ = nullptr;
   win_ = nullptr;
+
+  Mix_Quit();
   SDL_Quit();
 }
 
 void Chip8SDL::Init()
 {
-  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
     std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
     return;
   }
@@ -53,6 +59,13 @@ void Chip8SDL::Init()
 		std::cout << "SDL_CreateRGBSurface Error: " << SDL_GetError() << std::endl;
 		return;
 	}
+  //Initialize SDL_mixer
+  if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ) {
+    std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " <<  Mix_GetError()
+              << "\n";
+    return;
+  }
+  bonk_ = Mix_LoadWAV("/home/elliottb/development/chip8-cpp/res/bonk.wav");
 
   // TODO: This can only be two colors I suppose?
   // setup palette
@@ -106,4 +119,9 @@ void Chip8SDL::SetSurface(const uint8_t *gfx)
   // SDL_BlitSurface(win_surf, nullptr, surf_, nullptr);
   // SDL_UpdateWindowSurface(win_);
   // SDL_Delay(1);
+}
+
+void Chip8SDL::Bonk()
+{
+  Mix_PlayChannel(-1, bonk_, 0);
 }
