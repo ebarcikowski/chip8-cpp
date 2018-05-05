@@ -233,12 +233,14 @@ void Chip8::OpRegSet(uint16_t opc)
 {
   auto reg_index = GetNibble(opc, 2);
   v_[reg_index] = opc & 0xff;
+  pc_ += 2;
 }
 
 void Chip8::OpRegAdd(uint16_t opc)
 {
   auto reg_index = GetNibble(opc, 2);
   v_[reg_index] += opc & 0xff;
+  pc_ += 2;
 }
 
 void Chip8::OpRegSkipNe(uint16_t opc)
@@ -288,6 +290,7 @@ void Chip8::OpRegInterOps(uint16_t opc)
   default:
     std::cerr << "Should not get here\n";
   };
+  pc_ += 2;
 }
 
 void Chip8::OpJumpToAddr(uint16_t opc)
@@ -300,6 +303,7 @@ void Chip8::OpRegSetRand(uint16_t opc)
   uint8_t reg = GetNibble(opc, 2);
   uint8_t mask = opc & 0xff;
   v_[reg] = rand() & (opc & mask);
+  pc_ += 2;
 }
 
 void Chip8::OpDraw(uint16_t opc)

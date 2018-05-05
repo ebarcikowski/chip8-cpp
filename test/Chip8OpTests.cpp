@@ -51,12 +51,12 @@ TEST_F(OpCodes, SkipInstr)
   uint16_t opc = 0x3123;
   // register is not set, we shouldn't skip
   OpSkipInstr(opc);
-  ASSERT_EQ(pc_, pc_orig_);
+  ASSERT_EQ(pc_, pc_orig_+2);
   // set nibble 2 to the first byte 0x23
   v_[0x1] = 0x23;
   // Now we should get a skip.
   OpSkipInstr(opc);
-  ASSERT_EQ(pc_, pc_orig_ + 2);
+  ASSERT_EQ(pc_, pc_orig_ + 6);
 }
 
 TEST_F(OpCodes, SkipInstrNot)
@@ -64,11 +64,11 @@ TEST_F(OpCodes, SkipInstrNot)
   uint16_t opc = 0x4123;
   // register is not set so this this will skip.
   OpSkipInstrNot(opc);
-  ASSERT_EQ(pc_, pc_orig_ + 2);
+  ASSERT_EQ(pc_, pc_orig_ + 4);
   // Now register IS set, so we will NOT skip.
   v_[1] = 0x23;
   OpSkipInstrNot(opc);
-  ASSERT_EQ(pc_, pc_orig_ + 2);
+  ASSERT_EQ(pc_, pc_orig_ + 6);
 }
 
 TEST_F(OpCodes, SkipInstrEquals)
@@ -76,18 +76,18 @@ TEST_F(OpCodes, SkipInstrEquals)
   uint16_t opc = 0x5123;
   // All registers are zero, so this is equal, so we should skip.
   OpSkipInstrEquals(opc);
-  ASSERT_EQ(pc_, pc_orig_+2);
+  ASSERT_EQ(pc_, pc_orig_+4);
 
   // Set both registers to 1, should skip
   v_[1] = 1;
   v_[2] = 1;
   OpSkipInstrEquals(opc);
-  ASSERT_EQ(pc_, pc_orig_+4);
+  ASSERT_EQ(pc_, pc_orig_+8);
 
   // Now registers are unequal, should not skip.
   v_[2] = 0;
   OpSkipInstrEquals(opc);
-  ASSERT_EQ(pc_, pc_orig_+4);
+  ASSERT_EQ(pc_, pc_orig_+10);
 }
 
 TEST_F(OpCodes, RegSet)
@@ -95,6 +95,7 @@ TEST_F(OpCodes, RegSet)
   uint16_t opc = 0x6123;
   OpRegSet(opc);
   ASSERT_EQ(v_[1], 0x23);
+  ASSERT_EQ(pc_, pc_orig_ + 2);
 }
 
 TEST_F(OpCodes, RegAdd)
@@ -102,19 +103,21 @@ TEST_F(OpCodes, RegAdd)
   uint16_t opc = 0x7123;
   OpRegAdd(opc);
   ASSERT_EQ(v_[1], 0x23);
+  ASSERT_EQ(pc_, pc_orig_ + 2);
   // Do it again.
   OpRegAdd(opc);
   ASSERT_EQ(v_[1], 2 * 0x23);
+  ASSERT_EQ(pc_, pc_orig_ + 4);
 }
 
 TEST_F(OpCodes, RegSkipNe)
 {
   uint16_t opc = 0x9123;
   OpRegSkipNe(opc);
-  ASSERT_EQ(pc_, pc_orig_);
+  ASSERT_EQ(pc_, pc_orig_+2);
   v_[2] = 1;
   OpRegSkipNe(opc);
-  ASSERT_EQ(pc_, pc_orig_+2);
+  ASSERT_EQ(pc_, pc_orig_+6);
 }
 
 TEST_F(OpCodes, JumpToAddr)
@@ -127,16 +130,17 @@ TEST_F(OpCodes, JumpToAddr)
   ASSERT_EQ(pc_, 0x124);
 }
 
-
 TEST_F(OpCodes, RegSetRand)
 {
   uint16_t opc = 0xc123;
   OpRegSetRand(opc);
+  ASSERT_EQ(pc_, pc_orig_ + 2);
   // Tested this with a quick c program and this should be
   // the value after srand(0)
   srand(0);
   constexpr unsigned rand_valu = 1804289383;
   ASSERT_EQ(v_[1], rand_valu & 0x23);
+
 }
 
 
