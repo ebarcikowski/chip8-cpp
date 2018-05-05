@@ -9,6 +9,7 @@ include_directories(
 add_executable(chip8test
   Chip8Tests.cpp
   Chip8Mock.cpp
+  Chip8OpTests.cpp
   ${CMAKE_SOURCE_DIR}/src/Chip8.cpp)
 
 target_link_libraries(chip8test gtest_main gmock)

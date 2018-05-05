@@ -20,9 +20,9 @@ public:
   }
 
   void AssertMemoryEquals(size_t index, size_t value)
-    {
-      ASSERT_EQ(memory_[index], value);
-    }
+  {
+    ASSERT_EQ(memory_[index], value);
+  }
 };
 
 

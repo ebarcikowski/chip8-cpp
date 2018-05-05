@@ -29,7 +29,6 @@ protected:
   {
     std::remove(test_file);
   }
-
 };
 
 
@@ -54,3 +53,12 @@ TEST(Chip8, Init)
 }
 
 
+TEST(Chip8, GetNibble)
+{
+  uint16_t value = 0x1234;
+  ASSERT_EQ(Chip8::GetNibble(value, 0), 4);
+  ASSERT_EQ(Chip8::GetNibble(value, 1), 3);
+  ASSERT_EQ(Chip8::GetNibble(value, 2), 2);
+  ASSERT_EQ(Chip8::GetNibble(value, 3), 1);
+
+}

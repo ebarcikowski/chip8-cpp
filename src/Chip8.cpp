@@ -4,6 +4,7 @@
 #include <iterator>
 #include <array>
 #include <cassert>
+#include <cstdlib>
 
 
 static std::array<uint8_t, 80> chip8_fontset{
@@ -33,7 +34,16 @@ void Chip8::InitOpFunc()
   func_map_[0x3000] = [this](uint16_t opc){OpSkipInstr(opc);};
   func_map_[0x4000] = [this](uint16_t opc){OpSkipInstrNot(opc);};
   func_map_[0x5000] = [this](uint16_t opc){OpSkipInstrEquals(opc);};
+  func_map_[0x6000] = [this](uint16_t opc){OpRegSet(opc);};
+  func_map_[0x7000] = [this](uint16_t opc){OpRegAdd(opc);};
+  func_map_[0x8000] = [this](uint16_t opc){OpRegInterOps(opc);};
+  func_map_[0x9000] = [this](uint16_t opc){OpRegSkipNe(opc);};
   func_map_[0xa000] = [this](uint16_t opc){OpSetAddress(opc);};
+  func_map_[0xb000] = [this](uint16_t opc){OpJumpToAddr(opc);};
+  func_map_[0xc000] = [this](uint16_t opc){OpRegSetRand(opc);};
+  func_map_[0xd000] = [this](uint16_t opc){OpDraw(opc);};
+  func_map_[0xe000] = [this](uint16_t opc){OpKeySkipInstr(opc);};
+  func_map_[0xf000] = [this](uint16_t opc){OpTimers(opc);};
 }
 
 Chip8::Chip8()
@@ -120,13 +130,14 @@ void Chip8::OpSubRoutine(uint16_t opc)
   stack_[sp_] = pc_;
   ++sp_;
   // set pc to to jump address
-  pc_ = opcode_ & 0x0fff;
+  pc_ = opc & 0x0fff;
 }
 
 void Chip8::OpSkipInstr(uint16_t opc)
 {
   uint8_t val = opc & 0xff;
-  uint8_t reg = (opc >> 4) & 0xF;
+  uint8_t reg = GetNibble(opc, 2);
+
   assert(reg < 16);
   if (v_[reg] == val) {
     pc_ += 2;
@@ -136,7 +147,7 @@ void Chip8::OpSkipInstr(uint16_t opc)
 void Chip8::OpSkipInstrNot(uint16_t opc)
 {
   uint8_t val = opc & 0xff;
-  uint8_t reg = (opc >> 4) & 0xF;
+  uint8_t reg = GetNibble(opc, 2);
   assert(reg < 16);
   if (v_[reg] != val) {
     pc_ += 2;
@@ -145,8 +156,8 @@ void Chip8::OpSkipInstrNot(uint16_t opc)
 
 void Chip8::OpSkipInstrEquals(uint16_t opc)
 {
-  uint8_t regx = (opc >> 4) & 0xF;
-  uint8_t regy = (opc >> 8) & 0xF;
+  uint8_t regx = GetNibble(opc, 1);
+  uint8_t regy = GetNibble(opc, 2);
   if (v_[regx] == v_[regy]) {
     pc_ += 2;
   }
@@ -169,4 +180,74 @@ void Chip8::OpDefault(uint16_t opc)
     pc_ = stack_[--sp_];
     break;
   }
+}
+
+void Chip8::OpRegSet(uint16_t opc)
+{
+  auto reg_index = GetNibble(opc, 2);
+  v_[reg_index] = opc & 0xff;
+}
+
+void Chip8::OpRegAdd(uint16_t opc)
+{
+  auto reg_index = GetNibble(opc, 2);
+  v_[reg_index] += opc & 0xff;
+}
+
+void Chip8::OpRegSkipNe(uint16_t opc)
+{
+  auto regx = GetNibble(opc, 2);
+  auto regy = GetNibble(opc, 1);
+  if (v_[regx] != v_[regy])
+    pc_ += 2;
+}
+
+void Chip8::OpRegInterOps(uint16_t opc)
+{
+  unsigned regx = GetNibble(opc, 2);
+  unsigned regy = GetNibble(opc, 1);
+
+  switch (GetNibble(opc, 0)) {
+  case 0x0:
+    v_[regx] = v_[regy];
+    break;
+  case 0x1:
+    v_[regx] |= v_[regy];
+    break;
+  case 0x2:
+    v_[regx] &= v_[regy];
+    break;
+  case 0x3:
+    v_[regx] ^= v_[regy];
+    break;
+  case 0x4:
+    v_[regx] += v_[regy];
+    break;
+  case 0x5:
+    v_[regx] -= v_[regy];
+    break;
+  case 0x6:
+    v_[regx] = v_[regy] = v_[regy] >> 1;
+    break;
+  case 0x7:
+    v_[regx] = v_[regy] - v_[regx];
+    break;
+  case 0xe:
+    v_[regx] = v_[regy] = v_[regy] << 1;
+    break;
+  default:
+    std::cerr << "Should not get here\n";
+  };
+}
+
+void Chip8::OpJumpToAddr(uint16_t opc)
+{
+  pc_ = v_[0] + (opc & 0xfff);
+}
+
+void Chip8::OpRegSetRand(uint16_t opc)
+{
+  uint8_t reg = GetNibble(opc, 2);
+  uint8_t mask = opc & 0xff;
+  v_[reg] = rand() & (opc & mask);
 }
