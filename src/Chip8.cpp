@@ -134,7 +134,7 @@ void Chip8::Load(const char* filename)
 
 uint16_t Chip8::OpCode() const
 {
-  return (memory_[pc_] << 8) | memory_[pc_ + 1];
+  return (memory_[pc_] << 8) | memory_[pc_+1];
 }
 
 void Chip8::EmulateCycle()
@@ -142,7 +142,8 @@ void Chip8::EmulateCycle()
   draw_flag_ = false;
   // get opcode
   uint16_t opcode = OpCode();
-  std::cout << "opc:0x" << std::hex << opcode << "\n";
+  pc_ += 2;
+
   try {
     func_map_[opcode & 0xf000](opcode);
   }
@@ -163,7 +164,6 @@ void Chip8::EmulateCycle()
 void Chip8::OpSetAddress(uint16_t opcode)
 {
   I_ = opcode & 0x0fff;
-  pc_ += 2;
 }
 
 
@@ -184,8 +184,6 @@ void Chip8::OpSkipInstr(uint16_t opc)
 
   assert(reg < 16);
   if (v_[reg] == val)
-    pc_ += 4;
-  else
     pc_ += 2;
 }
 
@@ -195,10 +193,7 @@ void Chip8::OpSkipInstrNot(uint16_t opc)
   uint8_t reg = GetNibble(opc, 2);
   assert(reg < 16);
   if (v_[reg] != val)
-    pc_ += 4;
-  else
     pc_ += 2;
-
 }
 
 void Chip8::OpSkipInstrEquals(uint16_t opc)
@@ -206,8 +201,6 @@ void Chip8::OpSkipInstrEquals(uint16_t opc)
   uint8_t regx = GetNibble(opc, 1);
   uint8_t regy = GetNibble(opc, 2);
   if (v_[regx] == v_[regy])
-    pc_ += 4;
-  else
     pc_ += 2;
 }
 
@@ -221,7 +214,6 @@ void Chip8::OpDefault(uint16_t opc)
   switch (opc) {
   case 0x00e0:
     std::fill(gfx_.begin(), gfx_.end(), 0);
-    pc_ += 2;
     break;
   case 0x0ee:
     // return from subroutine
@@ -235,14 +227,12 @@ void Chip8::OpRegSet(uint16_t opc)
 {
   auto reg_index = GetNibble(opc, 2);
   v_[reg_index] = opc & 0xff;
-  pc_ += 2;
 }
 
 void Chip8::OpRegAdd(uint16_t opc)
 {
   auto reg_index = GetNibble(opc, 2);
   v_[reg_index] += opc & 0xff;
-  pc_ += 2;
 }
 
 void Chip8::OpRegSkipNe(uint16_t opc)
@@ -250,8 +240,6 @@ void Chip8::OpRegSkipNe(uint16_t opc)
   auto regx = GetNibble(opc, 2);
   auto regy = GetNibble(opc, 1);
   if (v_[regx] != v_[regy])
-    pc_ += 4;
-  else
     pc_ += 2;
 }
 
@@ -292,7 +280,6 @@ void Chip8::OpRegInterOps(uint16_t opc)
   default:
     std::cerr << "Should not get here\n";
   };
-  pc_ += 2;
 }
 
 void Chip8::OpJumpToAddr(uint16_t opc)
@@ -305,7 +292,6 @@ void Chip8::OpRegSetRand(uint16_t opc)
   uint8_t reg = GetNibble(opc, 2);
   uint8_t mask = opc & 0xff;
   v_[reg] = rand() & (opc & mask);
-  pc_ += 2;
 }
 
 void Chip8::OpDraw(uint16_t opc)
@@ -332,7 +318,6 @@ void Chip8::OpDraw(uint16_t opc)
     }
   }
   draw_flag_ = true;
-  pc_ += 2;
 }
 
 
@@ -342,14 +327,10 @@ void Chip8::OpKeySkipInstr(uint16_t opc)
   switch (opc & 0xff) {
   case 0x009e:
     if (key_[v_[reg]])
-      pc_ += 4;
-    else
       pc_ += 2;
     break;
   case 0xa1:
     if (key_[v_[reg]] == 0)
-      pc_ += 4;
-    else
       pc_ += 2;
   }
 }
@@ -401,5 +382,4 @@ void Chip8::OpTimers(uint16_t opc)
   default:
     std::cerr << "Should not get here\n";
   }
-  pc_ += 2;
 }
