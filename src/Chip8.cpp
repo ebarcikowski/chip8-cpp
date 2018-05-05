@@ -221,6 +221,7 @@ void Chip8::OpRegInterOps(uint16_t opc)
     v_[regx] ^= v_[regy];
     break;
   case 0x4:
+    v_[0xf] = v_[regx] > (0xff - v_[regy]) ? 1 : 0;
     v_[regx] += v_[regy];
     break;
   case 0x5:
