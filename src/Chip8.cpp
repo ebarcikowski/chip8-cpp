@@ -66,8 +66,50 @@ void Chip8::Init()
   // load font set
   for (int i=0;i<80;++i)
     memory_[i] = chip8_fontset[i];
+
+
 }
 
+void Chip8::InitKeyMap()
+{
+  /// +-+-+-+-+                +-+-+-+-+
+  /// |1|2|3|C|                |1|2|3|4|
+  /// +-+-+-+-+                +-+-+-+-+
+  /// |4|5|6|D|                |Q|W|E|R|
+  /// +-+-+-+-+       =>       +-+-+-+-+
+  /// |7|8|9|E|                |A|S|D|F|
+  /// +-+-+-+-+                +-+-+-+-+
+  /// |A|0|B|F|                |Z|X|C|V|
+  /// +-+-+-+-+                +-+-+-+-+
+  key_map_['1'] = 0x1;
+  key_map_['2'] = 0x2;
+  key_map_['3'] = 0x3;
+  key_map_['4'] = 0xc;
+  key_map_['Q'] = 0x4;
+  key_map_['q'] = 0x4;
+  key_map_['W'] = 0x5;
+  key_map_['w'] = 0x5;
+  key_map_['E'] = 0x6;
+  key_map_['e'] = 0x6;
+  key_map_['R'] = 0xd;
+  key_map_['r'] = 0xd;
+  key_map_['A'] = 0x7;
+  key_map_['a'] = 0x7;
+  key_map_['S'] = 0x8;
+  key_map_['s'] = 0x8;
+  key_map_['D'] = 0x9;
+  key_map_['d'] = 0x9;
+  key_map_['F'] = 0xe;
+  key_map_['f'] = 0xe;
+  key_map_['Z'] = 0xa;
+  key_map_['z'] = 0xa;
+  key_map_['X'] = 0x0;
+  key_map_['x'] = 0x0;
+  key_map_['C'] = 0xb;
+  key_map_['c'] = 0xb;
+  key_map_['V'] = 0xf;
+  key_map_['v'] = 0xf;
+}
 void Chip8::Load(const char* filename)
 {
   std::ifstream is(filename, std::ios::binary);

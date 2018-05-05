@@ -125,6 +125,11 @@ protected:
   /// hex based keypad to store the current state of a key
   std::array<uint8_t, 16> key_{};
 
+  virtual void SetKey(char key)
+  {
+    // key_ = key_map_[key];
+  }
   /// Dispatch table for opcode instructions
   std::unordered_map<unsigned, std::function<void(uint16_t)>> func_map_;
+  std::unordered_map<char, uint8_t> key_map_;
 };
