@@ -50,6 +50,7 @@ void Chip8::InitOpFunc()
 Chip8::Chip8()
 {
   Init();
+  InitKeyMap();
   InitOpFunc();
 }
 
@@ -60,15 +61,9 @@ void Chip8::Init()
   I_ = 0;
   sp_ = 0;
 
-  // clear display
-  // clear stack
-  // clear registers v0-vf
-
   // load font set
   for (int i=0;i<80;++i)
     memory_[i] = chip8_fontset[i];
-
-
 }
 
 void Chip8::InitKeyMap()
@@ -111,6 +106,7 @@ void Chip8::InitKeyMap()
   key_map_['V'] = 0xf;
   key_map_['v'] = 0xf;
 }
+
 void Chip8::Load(const char* filename)
 {
   std::ifstream is(filename, std::ios::binary);
