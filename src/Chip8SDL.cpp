@@ -7,29 +7,40 @@ Chip8SDL::Chip8SDL(unsigned scale) : scale_{scale},
                                      height_{Chip8::kHeight * scale}
 {
   Init();
-}
+// }
 
-Chip8SDL::~Chip8SDL()
-{
-  Destroy();
-}
+// Chip8SDL::~Chip8SDL()
+// {
+//   Destroy();
+// }
 
 
-void Chip8SDL::Destroy()
-{
-  if (bonk_)
-    Mix_FreeChunk(bonk_);
-  if (surf_)
-    SDL_FreeSurface(surf_);
-  if (win_)
-    SDL_DestroyWindow(win_);
+// void Chip8SDL::Destroy()
+// {
+//   if (bonk_)
+//     Mix_FreeChunk(bonk_);
+//   if (surf_)
+//     SDL_FreeSurface(surf_);
+//   if (win_)
+//     SDL_DestroyWindow(win_);
 
-  bonk_ = nullptr;
+//   bonk_ = nullptr;
   surf_ = nullptr;
   win_ = nullptr;
 
   Mix_Quit();
   SDL_Quit();
+}
+
+void Chip8SDL::Run()
+{
+  while (1) {
+    EmulateCycle();
+    if (draw_flag_) {
+      Draw();
+    }
+    SDL_Delay(30);
+  }
 }
 
 void Chip8SDL::Init()
@@ -88,6 +99,11 @@ void Chip8SDL::Init()
   //    colors[i].b = 255;
   //  }
   // SDL_SetPaletteColors(surf_->format->palette, colors, 0, 256);
+}
+
+void Chip8SDL::Draw()
+{
+  SetSurface(gfx_.data());
 }
 
 void Chip8SDL::SetSurface(const uint8_t *gfx)

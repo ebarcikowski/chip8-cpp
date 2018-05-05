@@ -6,7 +6,7 @@
 #include "Chip8.h"
 
 
-class Chip8SDL
+class Chip8SDL : public Chip8
 {
 public:
   Chip8SDL(unsigned scale=10);
@@ -14,10 +14,12 @@ public:
 
   void SetSurface(const uint8_t *buffer);
   void Bonk();
+  void Run();
 
 protected:
   void Init();
   void Destroy();
+  void Draw();
   // Uint32
   unsigned int scale_;
   unsigned width_;

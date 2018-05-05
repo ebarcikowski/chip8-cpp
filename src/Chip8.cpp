@@ -46,7 +46,6 @@ void Chip8::InitOpFunc()
   func_map_[0xf000] = [this](uint16_t opc){OpTimers(opc);};
 }
 
-
 Chip8::Chip8()
 {
   Init();
@@ -56,6 +55,8 @@ Chip8::Chip8()
 
 void Chip8::Init()
 {
+  std::cout << "Chip8::Init\n";
+
   pc_ = kPCIndex;
   opcode_ = 0;
   I_ = 0;
@@ -66,17 +67,19 @@ void Chip8::Init()
     memory_[i] = chip8_fontset[i];
 }
 
+/// \brief Define key mapping as described below.
+///
+/// +-+-+-+-+                +-+-+-+-+
+/// |1|2|3|C|                |1|2|3|4|
+/// +-+-+-+-+                +-+-+-+-+
+/// |4|5|6|D|                |Q|W|E|R|
+/// +-+-+-+-+       =>       +-+-+-+-+
+/// |7|8|9|E|                |A|S|D|F|
+/// +-+-+-+-+                +-+-+-+-+
+/// |A|0|B|F|                |Z|X|C|V|
+/// +-+-+-+-+                +-+-+-+-+
 void Chip8::InitKeyMap()
 {
-  /// +-+-+-+-+                +-+-+-+-+
-  /// |1|2|3|C|                |1|2|3|4|
-  /// +-+-+-+-+                +-+-+-+-+
-  /// |4|5|6|D|                |Q|W|E|R|
-  /// +-+-+-+-+       =>       +-+-+-+-+
-  /// |7|8|9|E|                |A|S|D|F|
-  /// +-+-+-+-+                +-+-+-+-+
-  /// |A|0|B|F|                |Z|X|C|V|
-  /// +-+-+-+-+                +-+-+-+-+
   key_map_['1'] = 0x1;
   key_map_['2'] = 0x2;
   key_map_['3'] = 0x3;
@@ -117,7 +120,7 @@ void Chip8::Load(const char* filename)
 
   is.seekg(0, is.end);
   size_t length = is.tellg();
-  if (length < kRomSize) {
+  if (length > kRomSize) {
     std::cerr << "Invalid input file: " << filename << "\n";
     exit(1);
   }
@@ -148,6 +151,7 @@ void Chip8::EmulateCycle()
 
   if (delay_timer_ > 0)
     --delay_timer_;
+
   if (sound_timer_ > 0) {
     if (sound_timer_ == 1)
       std::cout << "BEEP\n";
@@ -364,7 +368,7 @@ void Chip8::OpTimers(uint16_t opc)
     break;
   case 0x0a:
     // blocking key press.
-    v_[reg] = KeyPress();
+    v_[reg] = key_map_[KeyPress()];
     break;
   case 0x15:
     delay_timer_ = v_[reg];

@@ -45,9 +45,7 @@ void checker(unsigned char *buffer)
   }
 }
 
-
-/// Main loop
-int main(int argc, char *argv[])
+void draw_examples()
 {
   Chip8SDL chip8SDL;
   constexpr size_t sz = 32 * 64;
@@ -75,7 +73,13 @@ int main(int argc, char *argv[])
   quads(buffer, 3);
   chip8SDL.SetSurface(buffer);
   std::cin >> c;
-  // chip8.Load("game");
+}
+/// Main loop
+int main(int argc, char *argv[])
+{
+  Chip8SDL chip8;
+  chip8.Load("/home/elliottb/local/src/chip8/roms/guess.rom");
+  chip8.Run();
 
   // for (;;) {
   //   // performs one cycle
