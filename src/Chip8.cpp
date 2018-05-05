@@ -139,6 +139,7 @@ uint16_t Chip8::OpCode() const
 
 void Chip8::EmulateCycle()
 {
+  draw_flag_ = false;
   // get opcode
   uint16_t opcode = OpCode();
 
@@ -220,6 +221,7 @@ void Chip8::OpDefault(uint16_t opc)
   switch (opc) {
   case 0x00e0:
     std::fill(gfx_.begin(), gfx_.end(), 0);
+    pc_ += 2;
     break;
   case 0x0ee:
     // return from subroutine
