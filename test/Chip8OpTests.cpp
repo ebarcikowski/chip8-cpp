@@ -20,7 +20,7 @@ TEST_F(OpCodes, SetAddress)
 {
   uint16_t opcode = 0xa123;
   OpSetAddress(opcode);
-  ASSERT_EQ(i_, 0x123);
+  ASSERT_EQ(I_, 0x123);
   ASSERT_EQ(pc_, pc_orig_ + 2);
 }
 

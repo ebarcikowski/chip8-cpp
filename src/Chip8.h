@@ -87,12 +87,15 @@ protected:
   uint16_t opcode_{0};
   /// 4k memory
   std::array<uint8_t, kMemSize> memory_{};
-  /// 15 8-bit registers named V0, V1,.., VE.  The 16th register is used for
-  /// the 'carry flag'.
+  /// 15 8-bit registers named V0, V1,.., VE.
+  ///
+  ///  The 16th register (VF) has two dedicated purposes:
+  ///     - Collision detection in the graphics system.
+  ///     - Acts as a carry flag for bit operations.
   std::array<uint8_t, 16> v_{};
 
   /// Index to locations in memory used for writing or reading data
-  uint16_t i_{0};
+  uint16_t I_{0};
 
   /// program counter. May be 0x000 to 0xfff.
   ///

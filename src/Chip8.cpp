@@ -56,7 +56,7 @@ void Chip8::Init()
 {
   pc_ = kPCIndex;
   opcode_ = 0;
-  i_ = 0;
+  I_ = 0;
   sp_ = 0;
 
   // clear display
@@ -118,7 +118,7 @@ void Chip8::EmulateCycle()
 
 void Chip8::OpSetAddress(uint16_t opcode)
 {
-  i_ = opcode & 0x0fff;
+  I_ = opcode & 0x0fff;
   pc_ += 2;
 }
 
