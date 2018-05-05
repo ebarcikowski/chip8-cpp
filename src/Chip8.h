@@ -51,6 +51,8 @@ protected:
   /// \brief Map opcodes to functions
   void InitOpFunc();
 
+  virtual void InitKeyMap();
+
   uint16_t OpCode() const;
 
   //
@@ -79,7 +81,7 @@ protected:
   /// (prefix 0xd000)
   virtual void OpDraw(uint16_t opc);
   /// (prefix 0xe000);
-  virtual void OpKeySkipInstr(uint16_t opc){};
+  virtual void OpKeySkipInstr(uint16_t opc);
   /// (prefix 0xf000);
   virtual void OpTimers(uint16_t opc){};
 

@@ -320,3 +320,17 @@ void Chip8::OpDraw(uint16_t opc)
   draw_flag_ = true;
   pc_ += 2;
 }
+
+
+void Chip8::OpKeySkipInstr(uint16_t opc)
+{
+  auto reg = GetNibble(opc, 2);
+  switch (opc & 0xff) {
+  case 0x009e:
+    if (key_[v_[reg]])
+      pc_ += 4;
+    else
+      pc_ += 2;
+    break;
+  }
+}
