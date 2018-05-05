@@ -83,7 +83,7 @@ protected:
   /// (prefix 0xe000);
   virtual void OpKeySkipInstr(uint16_t opc);
   /// (prefix 0xf000);
-  virtual void OpTimers(uint16_t opc){};
+  virtual void OpTimers(uint16_t opc);
 
   /// current opcode
   uint16_t opcode_{0};

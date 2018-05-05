@@ -347,3 +347,42 @@ void Chip8::OpKeySkipInstr(uint16_t opc)
       pc_ += 2;
   }
 }
+
+void Chip8::OpTimers(uint16_t opc)
+{
+  auto reg = GetNibble(opc, 2);
+  switch (opc & 0xff) {
+  case 0x07:
+    v_[reg] = delay_timer_;
+    break;
+  case 0x0a:
+    // get current key
+    v_[reg] = 0;
+    break;
+  case 0x15:
+    delay_timer_ = v_[reg];
+    break;
+  case 0x18:
+    sound_timer_ = v_[reg];
+    break;
+  case 0x1e:
+    I_ += v_[reg];
+    break;
+  case 0x29:
+    // set sprite address
+    I_ = 5 * v_[reg];
+    break;
+  case 0x33:
+    break;
+  case 0x55:
+    for (unsigned i=0;i<=reg;i++)
+      memory_[I_+i] = v_[i];
+    break;
+  case 0x65:
+    for (unsigned i=0;i<=reg;i++)
+      v_[i] = memory_[I_+i];
+    break;
+  default:
+    std::cerr << "Should not get here\n";
+  }
+}
