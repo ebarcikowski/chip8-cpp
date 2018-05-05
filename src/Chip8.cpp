@@ -182,9 +182,10 @@ void Chip8::OpSkipInstr(uint16_t opc)
   uint8_t reg = GetNibble(opc, 2);
 
   assert(reg < 16);
-  if (v_[reg] == val) {
+  if (v_[reg] == val)
+    pc_ += 4;
+  else
     pc_ += 2;
-  }
 }
 
 void Chip8::OpSkipInstrNot(uint16_t opc)
@@ -192,18 +193,21 @@ void Chip8::OpSkipInstrNot(uint16_t opc)
   uint8_t val = opc & 0xff;
   uint8_t reg = GetNibble(opc, 2);
   assert(reg < 16);
-  if (v_[reg] != val) {
+  if (v_[reg] != val)
+    pc_ += 4;
+  else
     pc_ += 2;
-  }
+
 }
 
 void Chip8::OpSkipInstrEquals(uint16_t opc)
 {
   uint8_t regx = GetNibble(opc, 1);
   uint8_t regy = GetNibble(opc, 2);
-  if (v_[regx] == v_[regy]) {
+  if (v_[regx] == v_[regy])
+    pc_ += 4;
+  else
     pc_ += 2;
-  }
 }
 
 void Chip8::OpJump(uint16_t opc)
@@ -242,6 +246,8 @@ void Chip8::OpRegSkipNe(uint16_t opc)
   auto regx = GetNibble(opc, 2);
   auto regy = GetNibble(opc, 1);
   if (v_[regx] != v_[regy])
+    pc_ += 4;
+  else
     pc_ += 2;
 }
 
@@ -334,5 +340,10 @@ void Chip8::OpKeySkipInstr(uint16_t opc)
     else
       pc_ += 2;
     break;
+  case 0xa1:
+    if (key_[v_[reg]] == 0)
+      pc_ += 4;
+    else
+      pc_ += 2;
   }
 }
