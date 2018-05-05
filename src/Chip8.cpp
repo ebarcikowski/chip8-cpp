@@ -46,6 +46,7 @@ void Chip8::InitOpFunc()
   func_map_[0xf000] = [this](uint16_t opc){OpTimers(opc);};
 }
 
+
 Chip8::Chip8()
 {
   Init();
@@ -313,6 +314,7 @@ void Chip8::OpDraw(uint16_t opc)
         auto index = x + j + (y + i) * 64;
         if (gfx_[index] == 1)
           v_[0xf] = 1;
+        // toggle bit
         gfx_[index] ^= 1;
       }
     }
