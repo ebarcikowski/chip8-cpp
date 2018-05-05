@@ -85,6 +85,13 @@ protected:
   /// (prefix 0xf000);
   virtual void OpTimers(uint16_t opc);
 
+  /// \brief Blocking key press
+  ///
+  /// This function is used mostly for debugging as it will require an
+  /// and enter.  This function should be overloaded with a library that
+  /// will do the actually graphics (ncurses, SDL, or some other).
+  virtual char KeyPress();
+
   /// current opcode
   uint16_t opcode_{0};
   /// 4k memory

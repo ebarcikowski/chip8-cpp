@@ -348,6 +348,13 @@ void Chip8::OpKeySkipInstr(uint16_t opc)
   }
 }
 
+char Chip8::KeyPress()
+{
+  char c;
+  std::cin >> c;
+  return c;
+}
+
 void Chip8::OpTimers(uint16_t opc)
 {
   auto reg = GetNibble(opc, 2);
@@ -356,8 +363,8 @@ void Chip8::OpTimers(uint16_t opc)
     v_[reg] = delay_timer_;
     break;
   case 0x0a:
-    // get current key
-    v_[reg] = 0;
+    // blocking key press.
+    v_[reg] = KeyPress();
     break;
   case 0x15:
     delay_timer_ = v_[reg];
