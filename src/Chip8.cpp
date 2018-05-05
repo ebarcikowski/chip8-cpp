@@ -373,6 +373,9 @@ void Chip8::OpTimers(uint16_t opc)
     I_ = 5 * v_[reg];
     break;
   case 0x33:
+    memory_[I_] = v_[reg] / 100;
+    memory_[I_+1] = (v_[reg] / 10) % 10;
+    memory_[I_+2] = v_[reg] % 10;
     break;
   case 0x55:
     for (unsigned i=0;i<=reg;i++)
