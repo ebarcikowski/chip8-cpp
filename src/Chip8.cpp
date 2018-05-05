@@ -142,7 +142,7 @@ void Chip8::EmulateCycle()
   draw_flag_ = false;
   // get opcode
   uint16_t opcode = OpCode();
-
+  std::cout << "opc:0x" << std::hex << opcode << "\n";
   try {
     func_map_[opcode & 0xf000](opcode);
   }
@@ -401,4 +401,5 @@ void Chip8::OpTimers(uint16_t opc)
   default:
     std::cerr << "Should not get here\n";
   }
+  pc_ += 2;
 }
