@@ -77,7 +77,7 @@ protected:
   /// (prefix 0xc000)
   virtual void OpRegSetRand(uint16_t opc);
   /// (prefix 0xd000)
-  virtual void OpDraw(uint16_t opc){};
+  virtual void OpDraw(uint16_t opc);
   /// (prefix 0xe000);
   virtual void OpKeySkipInstr(uint16_t opc){};
   /// (prefix 0xf000);
@@ -112,6 +112,9 @@ protected:
   ///
   /// The window size is 64 x 32 (2048 pixels)
   std::array<uint8_t, kWidth * kHeight> gfx_{};
+
+  ///
+  bool draw_flag_{0};
 
   uint8_t delay_timer_{0};
   uint8_t sound_timer_{0};

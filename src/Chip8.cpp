@@ -251,3 +251,29 @@ void Chip8::OpRegSetRand(uint16_t opc)
   uint8_t mask = opc & 0xff;
   v_[reg] = rand() & (opc & mask);
 }
+
+void Chip8::OpDraw(uint16_t opc)
+{
+  auto x = v_[GetNibble(opc, 2)];
+  auto y = v_[GetNibble(opc, 1)];
+  auto n = GetNibble(opc, 0);
+
+  v_[0xf] = 0;
+  for (unsigned i=0;i<n;i++) {
+    // Each byte in memory contains 8 bits that should be mapped
+    // horizontally from x.
+    auto byte = memory_[I_ + i];
+    for (unsigned j=0;j<8;j++) {
+      if ((byte & (0x80 >> j)) != 0) {
+        // Bits are mapped from the MSB.  Test the bit corresponding
+        // to this horizontal position is on.
+        auto index = x + j + (y + i) * 64;
+        if (gfx_[index] == 1)
+          v_[0xf] = 1;
+        gfx_[index] ^= 1;
+      }
+    }
+  }
+  draw_flag_ = true;
+  pc_ += 2;
+}
