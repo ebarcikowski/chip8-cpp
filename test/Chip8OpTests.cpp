@@ -247,3 +247,26 @@ TEST_F(OpCodesMath, ShiftLeft)
   ASSERT_EQ(v_[1], vy_orig_ << 1);
   ASSERT_EQ(v_[2], vy_orig_ << 1);
 }
+
+
+TEST_F(OpCodes, Draw)
+{
+  uint16_t opc = 0xD003;
+  I_ = 0x200;
+  memory_[I_] = 0x3c;
+  memory_[I_+1] = 0xc3;
+  memory_[I_+2] = 0xff;
+  OpDraw(opc);
+  ASSERT_EQ(v_[0xf], 0);
+  std::vector<bool> line0{0, 0, 1, 1, 1, 1, 0, 0};
+  for (unsigned i=0;i<8;i++) {
+    ASSERT_EQ(gfx_[i], line0[i]);
+  }
+  std::vector<bool> line1{1, 1, 0, 0, 0, 0, 1, 1};
+  for (unsigned i=0;i<8;i++) {
+    ASSERT_EQ(gfx_[64 + i], line1[i]);
+  }
+  for (unsigned i=0;i<8;i++) {
+    ASSERT_EQ(gfx_[128 + i], 1);
+  }
+}
