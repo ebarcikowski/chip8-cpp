@@ -7,24 +7,24 @@ Chip8SDL::Chip8SDL(unsigned scale) : scale_{scale},
                                      height_{Chip8::kHeight * scale}
 {
   Init();
-// }
+}
 
-// Chip8SDL::~Chip8SDL()
-// {
-//   Destroy();
-// }
+Chip8SDL::~Chip8SDL()
+{
+  Destroy();
+}
 
 
-// void Chip8SDL::Destroy()
-// {
-//   if (bonk_)
-//     Mix_FreeChunk(bonk_);
-//   if (surf_)
-//     SDL_FreeSurface(surf_);
-//   if (win_)
-//     SDL_DestroyWindow(win_);
+void Chip8SDL::Destroy()
+{
+  if (bonk_)
+    Mix_FreeChunk(bonk_);
+  if (surf_)
+    SDL_FreeSurface(surf_);
+  if (win_)
+    SDL_DestroyWindow(win_);
 
-//   bonk_ = nullptr;
+  bonk_ = nullptr;
   surf_ = nullptr;
   win_ = nullptr;
 

@@ -78,7 +78,7 @@ void draw_examples()
 int main(int argc, char *argv[])
 {
   Chip8SDL chip8;
-  chip8.Load("/home/elliottb/local/src/chip8/roms/guess.rom");
+  chip8.Load("../res/IBM");
   chip8.Run();
 
   // for (;;) {
