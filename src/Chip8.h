@@ -47,7 +47,7 @@ public:
 protected:
   /// \brief Initialize registers and memory once
   void Init();
-
+  void ResetKeys();
   /// \brief Map opcodes to functions
   void InitOpFunc();
 

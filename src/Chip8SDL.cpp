@@ -7,6 +7,27 @@ Chip8SDL::Chip8SDL(unsigned scale) : scale_{scale},
                                      height_{Chip8::kHeight * scale}
 {
   Init();
+  InitSDLKeys();
+}
+
+void Chip8SDL::InitSDLKeys()
+{
+  sdl_key_map_[SDLK_1] = 0x1;
+  sdl_key_map_[SDLK_2] = 0x2;
+  sdl_key_map_[SDLK_2] = 0x3;
+  sdl_key_map_[SDLK_4] = 0xc;
+  sdl_key_map_[SDLK_q] = 0x4;
+  sdl_key_map_[SDLK_w] = 0x5;
+  sdl_key_map_[SDLK_e] = 0x6;
+  sdl_key_map_[SDLK_r] = 0xd;
+  sdl_key_map_[SDLK_a] = 0x7;
+  sdl_key_map_[SDLK_s] = 0x8;
+  sdl_key_map_[SDLK_d] = 0x9;
+  sdl_key_map_[SDLK_f] = 0xe;
+  sdl_key_map_[SDLK_z] = 0xa;
+  sdl_key_map_[SDLK_x] = 0x0;
+  sdl_key_map_[SDLK_c] = 0xb;
+  sdl_key_map_[SDLK_v] = 0xf;
 }
 
 Chip8SDL::~Chip8SDL()
@@ -34,12 +55,30 @@ void Chip8SDL::Destroy()
 
 void Chip8SDL::Run()
 {
-  while (1) {
+  int counter = 0;
+  bool quit = false;
+  SDL_Event e;
+  while (!quit) {
+    while (SDL_PollEvent(&e) != 0) {
+      if (e.type == SDL_QUIT)
+        quit = true;
+      else if (e.type == SDL_KEYDOWN) {
+        auto key_iter = sdl_key_map_.find(e.key.keysym.sym);
+        if (key_iter == sdl_key_map_.end())
+          continue;
+        key_[key_iter->second] = 1;
+        }
+      }
+
     EmulateCycle();
-    if (draw_flag_) {
+
+    counter++;
+    if ((counter % 100) == 0)
+      ResetKeys();
+
+    if (draw_flag_)
       Draw();
-    }
-    SDL_Delay(30);
+    SDL_Delay(delay_);
   }
 }
 

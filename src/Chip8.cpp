@@ -53,10 +53,13 @@ Chip8::Chip8()
   InitOpFunc();
 }
 
+void Chip8::ResetKeys()
+{
+  std::fill(key_.begin(), key_.end(), 0);
+}
+
 void Chip8::Init()
 {
-  std::cout << "Chip8::Init\n";
-
   pc_ = kPCIndex;
   opcode_ = 0;
   I_ = 0;
@@ -326,12 +329,17 @@ void Chip8::OpKeySkipInstr(uint16_t opc)
   auto reg = GetNibble(opc, 2);
   switch (opc & 0xff) {
   case 0x009e:
-    if (key_[v_[reg]])
+    if (key_[v_[reg]]) {
+      // std::cout << "got a key\n";
+      // key_[v_[reg]] = 0;
       pc_ += 2;
+    }
     break;
   case 0xa1:
-    if (key_[v_[reg]] == 0)
+    // std::cout << "key check 0xa1\n";
+    if (key_[v_[reg]] == 0) {
       pc_ += 2;
+    }
   }
 }
 
@@ -351,6 +359,7 @@ void Chip8::OpTimers(uint16_t opc)
     break;
   case 0x0a:
     // blocking key press.
+    std::cout << "blocking keypress\n";
     v_[reg] = key_map_[KeyPress()];
     break;
   case 0x15:
