@@ -35,7 +35,6 @@ Chip8SDL::~Chip8SDL()
   Destroy();
 }
 
-
 void Chip8SDL::Destroy()
 {
   if (bonk_)
@@ -67,13 +66,13 @@ void Chip8SDL::Run()
         if (key_iter == sdl_key_map_.end())
           continue;
         key_[key_iter->second] = 1;
-        }
       }
+    }
 
     EmulateCycle();
 
     counter++;
-    if ((counter % 100) == 0)
+    if ((counter % 75) == 0)
       ResetKeys();
 
     if (draw_flag_) {
@@ -121,25 +120,6 @@ void Chip8SDL::Init()
     return;
   }
   bonk_ = Mix_LoadWAV("/home/elliottb/development/chip8-cpp/res/bonk.wav");
-
-  // TODO: This can only be two colors I suppose?
-  // setup palette
-  // SDL_Color colors[256];
-  // // 0 => pixel is off
-  // colors[0].r = 0;
-  // colors[0].g = 0;
-  // colors[0].b = 0;
-
-  // colors[1].r = 255;
-  // colors[1].g = 255;
-  // colors[1].b = 255;
-  // // // everything about 0, pixel is the same color
-  // for (int i=1;i<256;i++) {
-  //   colors[i].r = 255;
-  //    colors[i].g = 255;
-  //    colors[i].b = 255;
-  //  }
-  // SDL_SetPaletteColors(surf_->format->palette, colors, 0, 256);
 }
 
 void Chip8SDL::Draw()
@@ -170,15 +150,10 @@ void Chip8SDL::SetSurface(const uint8_t *gfx)
     }
   }
   SDL_UnlockSurface(surf_);
-  // std::cout << "pitch: " << surf_->pitch << "\n";
   SDL_UpdateTexture(tex_, nullptr, surf_->pixels, surf_->pitch);
   SDL_RenderClear(ren_);
   SDL_RenderCopy(ren_, tex_, nullptr, nullptr);
-  // SDL_Surface *win_surf = SDL_GetWindowSurface(win_);
   SDL_RenderPresent(ren_);
-  // SDL_BlitSurface(win_surf, nullptr, surf_, nullptr);
-  // SDL_UpdateWindowSurface(win_);
-  // SDL_Delay(1);
 }
 
 void Chip8SDL::Bonk()
