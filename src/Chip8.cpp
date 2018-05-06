@@ -330,13 +330,10 @@ void Chip8::OpKeySkipInstr(uint16_t opc)
   switch (opc & 0xff) {
   case 0x009e:
     if (key_[v_[reg]]) {
-      // std::cout << "got a key\n";
-      // key_[v_[reg]] = 0;
       pc_ += 2;
     }
     break;
   case 0xa1:
-    // std::cout << "key check 0xa1\n";
     if (key_[v_[reg]] == 0) {
       pc_ += 2;
     }
