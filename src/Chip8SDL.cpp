@@ -1,6 +1,13 @@
 #include "Chip8SDL.h"
 #include <iostream>
+#include <fstream>
 #include <SDL2/SDL_mixer.h>
+
+bool Chip8SDL::FileExists(const char *fname)
+{
+  std::ifstream f(fname);
+  return f.good();
+}
 
 Chip8SDL::Chip8SDL(unsigned scale) : scale_{scale},
                                      width_{Chip8::kWidth * scale},
@@ -135,7 +142,9 @@ void Chip8SDL::Init()
               << "\n";
     return;
   }
-  bonk_ = Mix_LoadWAV("/home/elliottb/development/chip8-cpp/res/bonk.wav");
+  if (FileExists("/home/elliottb/development/chip8-cpp/res/bonk.wav"))
+    bonk_ = Mix_LoadWAV("/home/elliottb/development/chip8-cpp/res/bonk.wav");
+
 }
 
 void Chip8SDL::Draw()

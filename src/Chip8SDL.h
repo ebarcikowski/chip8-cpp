@@ -20,7 +20,8 @@ public:
   void Run();
   /// Draw arbitary surface.
   void SetSurface(const uint8_t *buffer);
-
+  /// \brief worker function just to see if .wav file is around.
+  static bool FileExists(const char *fname);
 protected:
   /// Play SDL sound.
   void Bonk();
