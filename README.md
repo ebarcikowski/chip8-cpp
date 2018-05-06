@@ -1,4 +1,4 @@
-# Synopsis
+# Overview
 Basic Chip8 emulator in C++.
 
 There are several of these emulators around the internet and on github.
@@ -29,19 +29,23 @@ apt-get install build-essential cmake libsdl2-dev libsdl2-mixer-dev
 ```
 
 Or on arch
+
 ```
 pacman -S cmake sdl2 sd2_mixer
+```
 
 # Usage
 
 Simply run
+
 ```
 chip8 <rom>
 ```
 
-# Keys
+# Game Keys
 
 Available keys for games are the following:
+
 ```
 +-+-+-+-+
 |1|2|3|4|
