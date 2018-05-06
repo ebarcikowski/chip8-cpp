@@ -10,6 +10,19 @@ Chip8SDL::Chip8SDL(unsigned scale) : scale_{scale},
   InitSDLKeys();
 }
 
+/// \brief this should set the following keys
+///
+/// The table below was adapated from
+//// http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
+///  +-+-+-+-+    +-+-+-+-+
+///  |1|2|3|4|    |1|2|3|C|
+///  +-+-+-+-+    +-+-+-+-+
+///  |Q|W|E|R|    |4|5|6|D|
+///  +-+-+-+-+ -> +-+-+-+-+
+///  |A|S|D|F|    |7|8|9|E|
+///  +-+-+-+-+    +-+-+-+-+
+///  |Z|X|C|V|    |A|0|B|F|
+///  +-+-+-+-+    +-+-+-+-+
 void Chip8SDL::InitSDLKeys()
 {
   sdl_key_map_[SDLK_1] = 0x1;

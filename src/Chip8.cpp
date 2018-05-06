@@ -72,15 +72,17 @@ void Chip8::Init()
 
 /// \brief Define key mapping as described below.
 ///
-/// +-+-+-+-+                +-+-+-+-+
-/// |1|2|3|C|                |1|2|3|4|
-/// +-+-+-+-+                +-+-+-+-+
-/// |4|5|6|D|                |Q|W|E|R|
-/// +-+-+-+-+       =>       +-+-+-+-+
-/// |7|8|9|E|                |A|S|D|F|
-/// +-+-+-+-+                +-+-+-+-+
-/// |A|0|B|F|                |Z|X|C|V|
-/// +-+-+-+-+                +-+-+-+-+
+/// The table below was adapated from
+//// http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
+///  +-+-+-+-+    +-+-+-+-+
+///  |1|2|3|4|    |1|2|3|C|
+///  +-+-+-+-+    +-+-+-+-+
+///  |Q|W|E|R|    |4|5|6|D|
+///  +-+-+-+-+ -> +-+-+-+-+
+///  |A|S|D|F|    |7|8|9|E|
+///  +-+-+-+-+    +-+-+-+-+
+///  |Z|X|C|V|    |A|0|B|F|
+///  +-+-+-+-+    +-+-+-+-+
 void Chip8::InitKeyMap()
 {
   key_map_['1'] = 0x1;
