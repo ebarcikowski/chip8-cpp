@@ -92,6 +92,9 @@ void Chip8SDL::Run()
       Draw();
       draw_flag_ = false;
     }
+    if (sound_flag_) {
+      Bonk();
+    }
     SDL_Delay(delay_);
   }
 }
@@ -171,5 +174,6 @@ void Chip8SDL::SetSurface(const uint8_t *gfx)
 
 void Chip8SDL::Bonk()
 {
-  Mix_PlayChannel(-1, bonk_, 0);
+  if (bonk_)
+    Mix_PlayChannel(-1, bonk_, 0);
 }

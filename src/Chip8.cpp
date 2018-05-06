@@ -159,9 +159,10 @@ void Chip8::EmulateCycle()
   if (delay_timer_ > 0)
     --delay_timer_;
 
+  sound_flag_ = false;
   if (sound_timer_ > 0) {
     if (sound_timer_ == 1)
-      std::cout << "BEEP\n";
+      sound_flag_ = true;
     --sound_timer_;
   }
 }

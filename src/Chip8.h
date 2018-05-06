@@ -124,7 +124,7 @@ protected:
 
   ///
   bool draw_flag_{0};
-
+  bool sound_flag_{0};
   uint8_t delay_timer_{0};
   uint8_t sound_timer_{0};
   /// stack depth is 16 deep

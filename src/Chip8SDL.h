@@ -18,6 +18,8 @@ public:
   virtual ~Chip8SDL();
   /// Run SDL loop.
   void Run();
+  /// Draw arbitary surface.
+  void SetSurface(const uint8_t *buffer);
 
 protected:
   /// Play SDL sound.
@@ -26,8 +28,7 @@ protected:
   void Init();
   /// Fill in keys for sdl_key_map_ member.
   void InitSDLKeys();
-  /// Draw arbitary surface.
-  void SetSurface(const uint8_t *buffer);
+
   /// Teardown all the SDL structs.
   void Destroy();
   /// Perform draw with gfx_ member.
