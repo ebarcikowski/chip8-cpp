@@ -76,8 +76,10 @@ void Chip8SDL::Run()
     if ((counter % 100) == 0)
       ResetKeys();
 
-    if (draw_flag_)
+    if (draw_flag_) {
       Draw();
+      draw_flag_ = false;
+    }
     SDL_Delay(delay_);
   }
 }

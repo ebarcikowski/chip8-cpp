@@ -184,10 +184,10 @@ void Chip8::OpSkipInstr(uint16_t opc)
 {
   uint8_t val = opc & 0xff;
   uint8_t reg = GetNibble(opc, 2);
-
   assert(reg < 16);
-  if (v_[reg] == val)
+  if (v_[reg] == val) {
     pc_ += 2;
+  }
 }
 
 void Chip8::OpSkipInstrNot(uint16_t opc)
@@ -251,6 +251,7 @@ void Chip8::OpRegInterOps(uint16_t opc)
   unsigned regx = GetNibble(opc, 2);
   unsigned regy = GetNibble(opc, 1);
 
+  unsigned v;
   switch (GetNibble(opc, 0)) {
   case 0x0:
     v_[regx] = v_[regy];
@@ -265,19 +266,25 @@ void Chip8::OpRegInterOps(uint16_t opc)
     v_[regx] ^= v_[regy];
     break;
   case 0x4:
-    v_[0xf] = v_[regx] > (0xff - v_[regy]) ? 1 : 0;
+    v = v_[regx] + v_[regy];
+    v_[0xf] = v > 255 ? 1 : 0;
+    // v_[0xf] = v_[regx] > (0xff - v_[regy]) ? 1 : 0;
     v_[regx] += v_[regy];
     break;
   case 0x5:
+    v_[0xf] = v_[regx] > v_[regy];
     v_[regx] -= v_[regy];
     break;
   case 0x6:
+    // v_[0xf] = v_[regx] & 0x1;
     v_[regx] = v_[regy] = v_[regy] >> 1;
     break;
   case 0x7:
+    v_[0xf] = v_[regy] > v_[regy];
     v_[regx] = v_[regy] - v_[regx];
     break;
   case 0xe:
+    v_[0xf] = v_[regx] & 0x80;
     v_[regx] = v_[regy] = v_[regy] << 1;
     break;
   default:
@@ -299,25 +306,31 @@ void Chip8::OpRegSetRand(uint16_t opc)
 
 void Chip8::OpDraw(uint16_t opc)
 {
-  auto x = v_[GetNibble(opc, 2)];
-  auto y = v_[GetNibble(opc, 1)];
-  auto n = GetNibble(opc, 0);
+  unsigned x = v_[GetNibble(opc, 2)];
+  unsigned y = v_[GetNibble(opc, 1)];
+  unsigned n = GetNibble(opc, 0);
 
   v_[0xf] = 0;
   for (unsigned i=0;i<n;i++) {
     // Each byte in memory contains 8 bits that should be mapped
     // horizontally from x.
-    auto byte = memory_[I_ + i];
+    unsigned line = memory_[I_ + i];
     for (unsigned j=0;j<8;j++) {
-      if ((byte & (0x80 >> j)) != 0) {
-        // Bits are mapped from the MSB.  Test the bit corresponding
-        // to this horizontal position is on.
-        auto index = x + j + (y + i) * 64;
-        if (gfx_[index] == 1)
+      if (line & 0x80) {
+        // Bits are mapped from left to right starting with the MSB
+        // MSB.  Test the bit corresponding to this horizontal position is on.
+        size_t index = x + j + (y + i) * 64;
+        if (index > gfx_.size())
+          // this condition can happen if a sprite is at the edge
+          // of the window.
+          continue;
+        if (gfx_[index] == 1) {
           v_[0xf] = 1;
+        }
         // toggle bit
         gfx_[index] ^= 1;
       }
+      line <<= 1;
     }
   }
   draw_flag_ = true;
@@ -329,14 +342,12 @@ void Chip8::OpKeySkipInstr(uint16_t opc)
   auto reg = GetNibble(opc, 2);
   switch (opc & 0xff) {
   case 0x009e:
-    if (key_[v_[reg]]) {
+    if (key_[v_[reg]])
       pc_ += 2;
-    }
     break;
   case 0xa1:
-    if (key_[v_[reg]] == 0) {
+    if (key_[v_[reg]] == 0)
       pc_ += 2;
-    }
   }
 }
 
