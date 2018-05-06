@@ -142,9 +142,15 @@ void Chip8SDL::Init()
               << "\n";
     return;
   }
-  if (FileExists("/home/elliottb/development/chip8-cpp/res/bonk.wav"))
-    bonk_ = Mix_LoadWAV("/home/elliottb/development/chip8-cpp/res/bonk.wav");
 
+  if (FileExists(BONK_FNAME)) {
+    std::cerr << "Loading sound file: " << BONK_FNAME << "\n";
+    bonk_ = Mix_LoadWAV(BONK_FNAME);
+  }
+  else {
+    std::cerr << "Warning: Could not find sound file: "
+              << BONK_FNAME << "\n";
+  }
 }
 
 void Chip8SDL::Draw()

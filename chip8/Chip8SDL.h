@@ -6,6 +6,10 @@
 #include "Chip8.h"
 #include <unordered_map>
 
+#ifndef BONK_FNAME
+#  define BONK_FNAME ""
+#endif
+
 /// \brief SDL elements for Chip8.
 ///
 /// The Chip8 does all the really lifting but this class will draw
