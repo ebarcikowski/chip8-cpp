@@ -3,7 +3,7 @@ Basic Chip8 emulator in C++.
 
 There are several of these emulators around the internet and on github.
 I did this originally because I thought writting a Chip8 emulator would
-make for a good first rust project, however, since I did not know much about
+make for a good first rust project.  However, since I did not know much about
 Chip8, I thought I would do one in C++ first.
 
 There are lots of resources for Chip8 on the web and on github.  I used the
@@ -21,8 +21,11 @@ I use ROMs from this github repository and browsed his source as well.
 
 # Build
 
-You will need a compiler that supports C++11, cmake, and SDL.  I don't
-currently have a Ubuntu installation, but the following should work
+You will need a compiler that supports C++11, cmake, and SDL.  So far,
+I have only built this on Linux with g++ 7.  I'll test this with some
+other OS's and compilers and will hopefully update these notes.
+
+I don't currently have a Ubuntu installation, but the following should work.
 
 ```
 apt-get install build-essential cmake libsdl2-dev libsdl2-mixer-dev
