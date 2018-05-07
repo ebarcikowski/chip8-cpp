@@ -8,7 +8,6 @@ int main(int argc, char *argv[])
     std::cout << "usage: " << argv[0] << " <rom>\n";
     exit(1);
   }
-  assert(argc > 1);
   chip8.Load(argv[1]);
   chip8.Run();
 }

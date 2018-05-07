@@ -19,7 +19,7 @@ The wiki page describes all the opcodes so is a needed resource.
 https://github.com/alexanderdickson/Chip-8-Emulator
 I use ROMs from this github repository and browsed his source as well.
 
-# Install
+# Build
 
 You will need a compiler that supports C++11, cmake, and SDL.  I don't
 currently have a Ubuntu installation, but the following should work
@@ -34,6 +34,15 @@ Or on arch
 pacman -S cmake sdl2 sd2_mixer
 ```
 
+Then, make a build directory, run cmake, and make.  As,
+```
+mkdir build
+cmake ..
+make 
+```
+
+The binary will be in the `chip8` directory, if it built successfully.
+
 # Usage
 
 Simply run
@@ -41,6 +50,8 @@ Simply run
 ```
 chip8 <rom>
 ```
+
+There are two roms included in the `res/roms` directory.
 
 # Game Keys
 
@@ -56,4 +67,12 @@ Available keys for games are the following:
 +-+-+-+-+
 |Z|X|C|V|
 +-+-+-+-+
+```
+
+# Tests
+If you want to run the tests for some reason, you need to include the
+googletest submodule and C++17 compatible compiler.  Clone this with the
+`--recursive` flag and run cmake with BUILD_WITH_TESTS=On.  I.e.,
+```
+cmake -DBUILD_WITH_TEST=On ..
 ```
