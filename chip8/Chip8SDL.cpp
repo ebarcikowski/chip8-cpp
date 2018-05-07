@@ -143,7 +143,6 @@ void Chip8SDL::Init()
   }
 
   if (FileExists(BONK_FNAME)) {
-    std::cerr << "Loading sound file: " << BONK_FNAME << "\n";
     bonk_ = Mix_LoadWAV(BONK_FNAME);
   }
   else {
