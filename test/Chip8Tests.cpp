@@ -11,13 +11,13 @@ protected:
   /// dummy file to write some data to
   static constexpr char test_file[]{"test_file"};
   /// dummy data to compare to after load
-  std::array<uint8_t, Chip8::kRomSize> rom_{};
+  std::array<uint8_t, Chip8::kMaxRomSize> rom_{};
 
   /// Setup dummy file and data
   virtual void SetUp()
   {
     std::ofstream f(test_file, std::ios::out | std::ios::binary);
-    for (unsigned int i=0;i<Chip8::kRomSize;i++) {
+    for (unsigned int i=0;i<Chip8::kMaxRomSize;i++) {
       uint8_t to_write = static_cast<uint8_t>(i % UINT8_MAX);
       rom_[i] = to_write;
       f << to_write;

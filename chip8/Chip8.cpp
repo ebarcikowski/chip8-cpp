@@ -61,7 +61,6 @@ void Chip8::ResetKeys()
 void Chip8::Init()
 {
   pc_ = kPCIndex;
-  opcode_ = 0;
   I_ = 0;
   sp_ = 0;
 
@@ -125,7 +124,7 @@ void Chip8::Load(const char* filename)
 
   is.seekg(0, is.end);
   size_t length = is.tellg();
-  if (length > kRomSize) {
+  if (length > kMaxRomSize) {
     std::cerr << "Invalid input file: " << filename << "\n";
     exit(1);
   }
@@ -167,11 +166,14 @@ void Chip8::EmulateCycle()
   }
 }
 
+
+// Opcode dispatchers start here.
+//
+
 void Chip8::OpSetAddress(uint16_t opcode)
 {
   I_ = opcode & 0x0fff;
 }
-
 
 void Chip8::OpSubRoutine(uint16_t opc)
 {
