@@ -20,36 +20,48 @@ public:
   /// \brief Chip8SDL ctor.
   Chip8SDL(unsigned scale=10);
   virtual ~Chip8SDL();
-  /// Run SDL loop.
+
+  /// \brief Run SDL loop.
   void Run();
-  /// Draw arbitary surface.
-  void SetSurface(const uint8_t *buffer);
+
   /// \brief worker function just to see if .wav file is around.
   static bool FileExists(const char *fname);
 protected:
-  /// Play SDL sound.
+  /// \brief Draw arbitary surface.
+  void SetSurface(const uint8_t *buffer);
+
+  /// \brief Play SDL sound.
   void Bonk();
-  /// Init SDL data.
+
+  /// \brief Init SDL data.
   void Init();
-  /// Fill in keys for sdl_key_map_ member.
+
+  /// \brief Fill in keys for sdl_key_map_ member.
   void InitSDLKeys();
 
   /// Teardown all the SDL structs.
   void Destroy();
+
   /// Perform draw with gfx_ member.
   void Draw();
 
   /// Scale from chip pixels to SDL pixels
   unsigned scale_;
+
   /// Width of SDL window.
   unsigned width_;
+
   /// Height of SDL window.
   unsigned height_;
+
   /// Delay for SDL loop.
   unsigned delay_{1};
 
   /// Mapping from SDL key values to indexes in key_ member.
   std::unordered_map<unsigned, unsigned> sdl_key_map_;
+
+  // Following are SDL elements needed for the graphics.
+  //
   SDL_Texture *tex_{nullptr};
   SDL_Renderer *ren_{nullptr};
   SDL_Window *win_{nullptr};
