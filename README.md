@@ -40,6 +40,7 @@ pacman -S cmake sdl2 sd2_mixer
 Then, make a build directory, run cmake, and make.  As,
 ```
 mkdir build
+cd build
 cmake ..
 make 
 ```
